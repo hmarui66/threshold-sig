@@ -1,4 +1,4 @@
-package schnorr
+package musig
 
 import (
 	"go.dedis.ch/kyber/v3"
@@ -30,6 +30,7 @@ func Hash(s string) kyber.Scalar {
 	return curve.Scalar().SetBytes(sha256.Sum(nil))
 }
 
+// Sign generates a Schnorr Signature
 func Sign(k kyber.Scalar, r kyber.Point, m string, x kyber.Scalar) *Signature {
 	e := Hash(m + r.String())
 	s := curve.Scalar().Sub(k, curve.Scalar().Mul(e, x))
@@ -40,6 +41,7 @@ func Sign(k kyber.Scalar, r kyber.Point, m string, x kyber.Scalar) *Signature {
 	}
 }
 
+// Verify verifies a Schnorr Signature
 func Verify(m string, sig *Signature, pubKey kyber.Point) bool {
 	g := curve.Point().Base()
 

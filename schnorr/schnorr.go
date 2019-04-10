@@ -19,7 +19,7 @@ func GenRandom() kyber.Scalar {
 	return curve.Scalar().Pick(curve.RandomStream())
 }
 
-func GenPublicKey(x kyber.Scalar) kyber.Point {
+func MulToBase(x kyber.Scalar) kyber.Point {
 	return curve.Point().Mul(x, curve.Point().Base())
 }
 
@@ -30,11 +30,7 @@ func Hash(s string) kyber.Scalar {
 	return curve.Scalar().SetBytes(sha256.Sum(nil))
 }
 
-func Sign(k kyber.Scalar, m string, x kyber.Scalar) *Signature {
-	g := curve.Point().Base()
-
-	r := curve.Point().Mul(k, g)
-
+func Sign(k kyber.Scalar, r kyber.Point, m string, x kyber.Scalar) *Signature {
 	e := Hash(m + r.String())
 	s := curve.Scalar().Sub(k, curve.Scalar().Mul(e, x))
 

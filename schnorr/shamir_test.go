@@ -1,7 +1,6 @@
 package schnorr
 
 import (
-	"fmt"
 	"reflect"
 	"testing"
 
@@ -94,37 +93,4 @@ func TestNewRandomSecretAndSolve(t *testing.T) {
 			}
 		})
 	}
-}
-
-func TestThresholdSignature(t *testing.T) {
-	privKey := NewRandomSecret(2)
-	sharedPrivKey1 := privKey.GenShare(1)
-	sharedPrivKey2 := privKey.GenShare(2)
-
-	nonce := NewRandomSecret(2)
-	sharedNonce1 := nonce.GenShare(1)
-	sharedNonce2 := nonce.GenShare(2)
-
-	msg := `hello threshold signature`
-	sig1 := Sign(sharedNonce1.Secret, msg, sharedPrivKey1.Secret)
-	sig2 := Sign(sharedNonce2.Secret, msg, sharedPrivKey2.Secret)
-
-	validSig := Sign(nonce.Cons[0], msg, privKey.Cons[0])
-	fmt.Println(Verify(msg, validSig, GenPublicKey(privKey.Cons[0])))
-
-	interpolatedSig := &Signature{
-		R: validSig.R,
-		S: Solve(
-			&SharedSecret{
-				X:      1,
-				Secret: sig1.S,
-			},
-			&SharedSecret{
-				X:      2,
-				Secret: sig2.S,
-			},
-		),
-	}
-
-	fmt.Println(Verify(msg, interpolatedSig, GenPublicKey(privKey.Cons[0])))
 }

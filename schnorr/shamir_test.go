@@ -54,3 +54,43 @@ func TestSecret_GenShare(t *testing.T) {
 		})
 	}
 }
+
+func TestNewRandomSecretAndSolve(t *testing.T) {
+	type args struct {
+		cnt int
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "2 player",
+			args: args{
+				cnt: 2,
+			},
+			want: true,
+		},
+		{
+			name: "3 player",
+			args: args{
+				cnt: 3,
+			},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			secret := NewRandomSecret(tt.args.cnt)
+
+			sharedList := make([]*SharedSecret, tt.args.cnt)
+			for i := range secret.Cons {
+				x := int64(i + 1)
+				sharedList[i] = secret.GenShare(x)
+			}
+			if got := Solve(sharedList...); !got.Equal(secret.Cons[0]) {
+				t.Errorf("NewRandomSecret() = %v, want %v", got, secret.Cons[0])
+			}
+		})
+	}
+}

@@ -1,6 +1,8 @@
 package schnorr
 
-import "go.dedis.ch/kyber/v3"
+import (
+	"go.dedis.ch/kyber/v3"
+)
 
 func Solve(sharedList ...*SharedSecret) kyber.Scalar {
 	res := curve.Scalar().Zero()
@@ -15,7 +17,7 @@ func Solve(sharedList ...*SharedSecret) kyber.Scalar {
 				numer,
 				curve.Scalar().Mul(
 					curve.Scalar().SetInt64(-1),
-					jS.Secret,
+					curve.Scalar().SetInt64(jS.X),
 				))
 			denom = curve.Scalar().Mul(
 				denom,
@@ -23,7 +25,6 @@ func Solve(sharedList ...*SharedSecret) kyber.Scalar {
 					curve.Scalar().SetInt64(iS.X),
 					curve.Scalar().SetInt64(jS.X),
 				))
-
 		}
 		res = curve.Scalar().Add(
 			res,

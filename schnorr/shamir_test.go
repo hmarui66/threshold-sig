@@ -28,8 +28,8 @@ func TestSecret_GenShare(t *testing.T) {
 				x: 1,
 			},
 			want: &SharedSecret{
-				x:      1,
-				secret: curve.Scalar().SetInt64(1 + 2 + 3),
+				X:      1,
+				Secret: curve.Scalar().SetInt64(1 + 2 + 3),
 			},
 		},
 		{
@@ -38,15 +38,15 @@ func TestSecret_GenShare(t *testing.T) {
 				x: 2,
 			},
 			want: &SharedSecret{
-				x:      2,
-				secret: curve.Scalar().SetInt64(1 + 2*2 + 3*2*2),
+				X:      2,
+				Secret: curve.Scalar().SetInt64(1 + 2*2 + 3*2*2),
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			sec := &Secret{
-				cons: cons,
+				Cons: cons,
 			}
 			if got := sec.GenShare(tt.args.x); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Secret.GenShare() = %v, want %v", got, tt.want)

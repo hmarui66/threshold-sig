@@ -30,10 +30,8 @@ func Hash(s string) kyber.Scalar {
 	return curve.Scalar().SetBytes(sha256.Sum(nil))
 }
 
-func Sign(m string, x kyber.Scalar) *Signature {
+func Sign(k kyber.Scalar, m string, x kyber.Scalar) *Signature {
 	g := curve.Point().Base()
-
-	k := curve.Scalar().Pick(curve.RandomStream())
 
 	r := curve.Point().Mul(k, g)
 
